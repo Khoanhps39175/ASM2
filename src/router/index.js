@@ -14,8 +14,18 @@ const routes = [
     children: [
       { path: "", name: "Home", component: Home }, // Trang chủ
       { path: "news", name: "News", component: News }, // Trang tin tức
-      { path: "tools", name: "Tools", component: Tools }, // Trang công cụ
-      { path: "detail/:id", name: "Detail", component: Detail, props: true }, // Chuyển tham số id vào props
+      { 
+        path: "tools", 
+        name: "Tools", 
+        component: Tools, 
+        meta: { requiresAuth: true } // Trang công cụ yêu cầu đăng nhập
+      }, 
+      { 
+        path: "detail/:id", 
+        name: "Detail", 
+        component: Detail, 
+        props: true // Chuyển tham số id vào props
+      },
     ],
   },
 ];
@@ -23,6 +33,22 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+// Kiểm tra trạng thái đăng nhập trong localStorage
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated'); // Kiểm tra trạng thái đăng nhập
+
+  // Kiểm tra nếu route yêu cầu xác thực
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next({ name: 'Home' }); // Chuyển hướng về trang chủ nếu chưa đăng nhập
+    } else {
+      next(); // Cho phép truy cập nếu đã đăng nhập
+    }
+  } else {
+    next(); // Cho phép truy cập nếu không yêu cầu xác thực
+  }
 });
 
 export default router;

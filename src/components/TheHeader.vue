@@ -327,6 +327,7 @@ const loginUser = () => {
       // Lưu thông tin email của người dùng đã đăng nhập
       localStorage.setItem("currentUserEmail", user.email);
       localStorage.setItem("currentUserName", user.name);
+      localStorage.setItem('isAuthenticated', 'true');
 
       loginEmail.value = "";
       loginPassword.value = "";
@@ -360,6 +361,7 @@ const logout = () => {
   successMessageLogin.value = ""; // Xóa thông báo thành công (nếu có)
   successMessage.value = "";
   localStorage.removeItem("user"); // Xóa thông tin trong localStorage nếu cần
+  localStorage.removeItem('isAuthenticated');
   currentUser.value = "";
   // Điều hướng về trang chủ sau khi đăng xuất
   router.push('/'); // Quay về trang chủ
