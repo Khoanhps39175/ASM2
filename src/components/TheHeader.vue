@@ -207,6 +207,19 @@ const successMessageLogin = ref("");
 // Biểu thức chính quy để kiểm tra định dạng email
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Kiểm tra trạng thái đăng nhập khi ứng dụng khởi động
+const storedUserName = localStorage.getItem("currentUserName");
+const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+
+// Khởi tạo trạng thái
+if (isAuthenticated && storedUserName) {
+  isLoggedIn.value = true;
+  userName.value = storedUserName;
+} else {
+  isLoggedIn.value = false;
+  userName.value = ""; // Đặt về giá trị mặc định
+}
+
 const registerUser = () => {
   nameError.value = "";
   phoneError.value = "";
@@ -353,8 +366,6 @@ const loginUser = () => {
   }
 };
 
-
-
 const logout = () => {
   isLoggedIn.value = false; // Đặt trạng thái đăng nhập về false
   userName.value = ""; // Xóa tên người dùng
@@ -363,7 +374,6 @@ const logout = () => {
   localStorage.removeItem("user"); // Xóa thông tin trong localStorage nếu cần
   localStorage.removeItem('isAuthenticated');
   currentUser.value = "";
-  // Điều hướng về trang chủ sau khi đăng xuất
   router.push('/'); // Quay về trang chủ
 };
 
